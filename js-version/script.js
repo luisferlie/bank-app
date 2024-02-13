@@ -61,16 +61,36 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
-
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
       .toLowerCase()
-      .split(' ')
-      .map(name => name[0])
-      .join('');
+      .split(" ")
+      .map((name) => name[0])
+      .join("");
   });
-  console.log(accs)
+  console.log(accs);
 };
 createUsernames(accounts);
-console.log(accounts[3].username)
+console.log(accounts[3].username);
+
+const nombre = inputLoginUsername.value;
+const clave = inputLoginPin.value;
+
+btnLogin.addEventListener("click", chequear);
+
+function chequear(e) {
+  e.preventDefault();
+
+  const nombre = inputLoginUsername.value;
+  const clave = inputLoginPin.value;
+  console.log(nombre,clave)
+  const identified=accounts.some(acc=>acc.username==nombre)
+    if(identified){
+      if(accounts.find(acc=>acc.username==nombre).pin==clave){
+        const NombreCompleto=accounts.find(acc=>acc.username==nombre).owner
+        labelWelcome.innerHTML=`<h1>Bienvenido Sr ${NombreCompleto}</h1>`
+      }
+      else{labelWelcome.innerHTML="<p style='color:red'>No corresponden las credenciales</p>"}
+    }else{labelWelcome.innerHTML="<p style='color:red'>No corresponden las credenciales</p>"}
+}
