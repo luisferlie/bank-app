@@ -84,13 +84,74 @@ function chequear(e) {
 
   const nombre = inputLoginUsername.value;
   const clave = inputLoginPin.value;
-  console.log(nombre,clave)
-  const identified=accounts.some(acc=>acc.username==nombre)
-    if(identified){
-      if(accounts.find(acc=>acc.username==nombre).pin==clave){
-        const NombreCompleto=accounts.find(acc=>acc.username==nombre).owner
-        labelWelcome.innerHTML=`<h1>Bienvenido Sr ${NombreCompleto}</h1>`
-      }
-      else{labelWelcome.innerHTML="<p style='color:red'>No corresponden las credenciales</p>"}
-    }else{labelWelcome.innerHTML="<p style='color:red'>No corresponden las credenciales</p>"}
+
+  console.log(nombre, clave);
+
+  const identified = accounts.some((acc) => acc.username == nombre);
+  if (identified) {
+    if (accounts.find((acc) => acc.username == nombre).pin == clave) {
+      const NombreCompleto = accounts.find(
+        (acc) => acc.username == nombre
+      ).owner;
+      labelWelcome.innerHTML = `<h1>Bienvenido Sr ${NombreCompleto}</h1>`;
+      containerApp.style.opacity = 1;
+    } else {
+      labelWelcome.innerHTML =
+        "<p style='color:red'>No corresponden las credenciales</p>";
+    }
+  } else {
+    labelWelcome.innerHTML =
+      "<p style='color:red'>No corresponden las credenciales</p>";
+  }
+
+  const cliente = accounts.find((acc) => acc.username == nombre);
+  console.log(cliente);
+
+  console.log(calcularSaldo(cliente));
+  labelBalance.innerHTML = calcularSaldo(cliente);
+
+  const mov = cliente.movements;
+  const deposits = mov.filter((elem) => elem > 0).reduce((previous, current) => previous+current
+  , 0);
+
+  const withdrawal = mov.filter((elem) => elem < 0).reduce((previous, current) => previous+current
+  , 0);;
+  console.log(withdrawal);
+  displayMovements(mov);
+  labelSumIn.innerHTML=deposits
+  labelSumOut.innerHTML=withdrawal
+  btnTransfer.addEventListener('click',transferMoney)
+}
+
+const calcularSaldo = (acc) => {
+  return acc.movements.reduce((previous, current) => previous + current, 0);
+};
+
+function displayMovements(movements) {
+  containerMovements.innerHTML = "";
+  movements.forEach(function (mov, i) {
+    const type = mov > 0 ? "deposit" : "withdrawal";
+    const html = `
+      <div class="movements__row">
+        <div class="movements__type movements__type--${type}">${
+      i + 1
+    } ${type}</div>
+        <div class="movements__value">${mov}€</div>
+      </div>
+    `;
+    containerMovements.insertAdjacentHTML("afterbegin", html);
+  });
+}
+function transferMoney(e){
+  console.log('hola')
+  e.preventDefault()
+  const inputTransferTo = document.querySelector(".form__input--to");
+  const inputTransferAmount = document.querySelector(".form__input--amount");
+  inputLoginUsername = document.querySelector(".login__input--user");
+  cliente=inputLoginUsername.textContent
+  
+  //restar transf a emisor
+console.log(cliente)
+  //añadirimporte a destinatario
+  //reflejar en ui
 }
